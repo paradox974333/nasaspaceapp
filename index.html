@@ -70,12 +70,115 @@
             color: #fff;
             font-size: 24px;
         }
+        #backgroundText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 180px;
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    color: rgba(255, 255, 255, 0.126); /* Subtle and elegant transparency */
+    z-index: 1; /* Behind the interactive elements */
+    letter-spacing: 20px;
+    text-transform: uppercase;
+    pointer-events: none; /* Prevent interaction */
+    user-select: none; /* Prevent text selection */
+}
+
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+    #backgroundText {
+        font-size: 100px;  /* Smaller font size for tablets/phones */
+        letter-spacing: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #backgroundText {
+        font-size: 60px;  /* Even smaller for phones */
+        letter-spacing: 5px;
+    }
+}
+#planetMenu {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    text-align: center;
+}
+
+#planetMenu button {
+    display: flex;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+#planetMenu button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#showPlanetsBtn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #f39c12;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#showPlanetsBtn:hover {
+    background-color: #e67e22;
+}
+
+/* Responsive for mobile */
+@media (max-width: 768px) {
+    #planetMenu button, #showPlanetsBtn {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    #planetMenu button, #showPlanetsBtn {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+}
+
+
+
     </style>
 </head>
 <body>
     <div id="loadingScreen">
         <div id="loadingText">Loading Ultimate Exoplanet Explorer...</div>
     </div>
+    <div id="backgroundText">SOLAR SYSTEM</div>
+    <button id="showPlanetsBtn">Show Exoplanets</button>
+
+<div id="planetMenu">
+    <button onclick="location.href='exoplanet1.html'">Kepler-186f</button>
+    <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
+    <button onclick="location.href='exoplanet3.html'">Proxima Centauri b</button>
+    <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
+</div>
+
+
     <div id="container"></div>
     <div id="infoBox">Click on a planet for detailed info.</div>
     <div id="controls">
@@ -397,7 +500,19 @@
                 }, 1000);
             }, 1000);
         });
-        
+        const showPlanetsBtn = document.getElementById('showPlanetsBtn');
+const planetMenu = document.getElementById('planetMenu');
+
+showPlanetsBtn.addEventListener('click', () => {
+    // Toggle the display of the planet menu
+    planetMenu.style.display = planetMenu.style.display === 'block' ? 'none' : 'block';
+});
+// Wait for a few seconds and then hide the background text
+setTimeout(() => {
+    const backgroundText = document.getElementById('backgroundText');
+    backgroundText.style.display = 'none'; // Hide the background text
+}, 5000); // 5000 milliseconds = 5 seconds
+
     </script>
     
 </body>
