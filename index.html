@@ -280,12 +280,26 @@
         }
 
         function setupEventListeners() {
-            window.addEventListener('resize', onWindowResize, false);
-            window.addEventListener('click', onMouseClick, false);
-            document.getElementById('toggleOrbits').addEventListener('click', toggleOrbits);
-            document.getElementById('toggleRotation').addEventListener('click', toggleRotation);
-            document.getElementById('toggleAtmosphere').addEventListener('click', toggleAtmosphere);
-        }
+    window.addEventListener('resize', onWindowResize, false);
+    
+    // Adding click and touch event listeners
+    window.addEventListener('click', onMouseClick, false);
+    window.addEventListener('touchstart', onMouseClick, false); // Touch event for mobile
+
+    const toggleOrbitsButton = document.getElementById('toggleOrbits');
+    const toggleRotationButton = document.getElementById('toggleRotation');
+    const toggleAtmosphereButton = document.getElementById('toggleAtmosphere');
+
+    // Adding click and touch event listeners to buttons
+    toggleOrbitsButton.addEventListener('click', toggleOrbits);
+    toggleOrbitsButton.addEventListener('touchstart', toggleOrbits);
+
+    toggleRotationButton.addEventListener('click', toggleRotation);
+    toggleRotationButton.addEventListener('touchstart', toggleRotation);
+
+    toggleAtmosphereButton.addEventListener('click', toggleAtmosphere);
+    toggleAtmosphereButton.addEventListener('touchstart', toggleAtmosphere);
+}
 
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -383,6 +397,8 @@
                 }, 1000);
             }, 1000);
         });
+        
     </script>
+    
 </body>
 </html>
