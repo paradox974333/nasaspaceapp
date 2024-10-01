@@ -166,16 +166,16 @@
     <div id="loadingScreen">
         <div id="loadingText">Loading Ultimate Exoplanet Explorer...</div>
     </div>
-    <div id="backgroundText">TRAPPIST-1e</div>
+    <div id="backgroundText">K2-141 b</div>
     <button id="showPlanetsBtn">Show Exoplanets</button>
 
-<div id="planetMenu">
-    <button onclick="location.href='index.html'">home</button>
-    <button onclick="location.href='exoplanet1.html'">Kepler-186f</button>
-    <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
-    <button onclick="location.href='exoplanet3.html'">Proxima Centauri b</button>
-    <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
-</div>
+    <div id="planetMenu">
+        <button onclick="location.href='index.html'">HOME</button>
+        <button onclick="location.href='exoplanet1.html'">Kepler-186f</button>
+        <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
+        <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
+        <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
+    </div>
 
 
     <div id="container"></div>
@@ -183,7 +183,7 @@
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
-        <button id="toggleAtmosphere">Toggle Atmosphere</button>
+        <button id="toggleAtmosphere">CHAT WITH AI</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -213,21 +213,8 @@
                 radius: '6,371 km',
                 mass: '5.97 × 10^24 kg',
                 orbitalPeriod: '365.25 days'
-            },
-            'Kepler-186f': {
-                name: 'Kepler-186f',
-                description: 'An exoplanet orbiting the red dwarf Kepler-186, about 582 light-years from Earth.',
-                radius: '1.17 × Earth radius',
-                mass: 'Unknown',
-                orbitalPeriod: '129.9 days'
-            },
-            'TRAPPIST-1e': {
-                name: 'TRAPPIST-1e',
-                description: 'An exoplanet orbiting the ultra-cool dwarf star TRAPPIST-1, about 39 light-years from Earth.',
-                radius: '0.92 × Earth radius',
-                mass: '0.77 × Earth mass',
-                orbitalPeriod: '6.1 days'
             }
+          
         };
 
         function init() {
@@ -265,17 +252,17 @@
             const loader = new THREE.TextureLoader();
 
             // Sun
-            const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
+            const sunGeometry = new THREE.SphereGeometry(4, 32, 32);
             const sunMaterial = new THREE.MeshBasicMaterial({
-                map: loader.load('sun2.jpg')
+                map: loader.load('8k_sun.jpg')
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
             scene.add(sun);
 
             // Earth
-            const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
+            const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
             const earthMaterial = new THREE.MeshPhongMaterial({
-                map: loader.load('8k_earth_daymap.jpg'),
+                map: loader.load('lava.jpg'),
                 bumpMap: loader.load('8k_earth_nightmap.jpg'),
                 bumpScale: 0.05,
                 specularMap: loader.load('https://upload.wikimedia.org/wikipedia/commons/4/48/Shadedrelief.jpg'),
@@ -296,49 +283,10 @@
             earthAtmosphere = new THREE.Mesh(earthAtmosphereGeometry, earthAtmosphereMaterial);
             earth.add(earthAtmosphere);
 
-            // Exoplanet 1 (Kepler-186f)
-            const exo1Geometry = new THREE.SphereGeometry(1.17, 32, 32);
-            const exo1Material = new THREE.MeshPhongMaterial({
-                map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Artist%27s_rendering_of_Kepler-186f.jpg/1024px-Artist%27s_rendering_of_Kepler-186f.jpg'),
-                bumpScale: 0.05,
-                specular: new THREE.Color('grey')
-            });
-            exoplanet1 = new THREE.Mesh(exo1Geometry, exo1Material);
-            exoplanet1.position.set(15, 0, 0);
-            scene.add(exoplanet1);
-
-            // Exoplanet 1's atmosphere
-            const exo1AtmosphereGeometry = new THREE.SphereGeometry(1.18, 32, 32);
-            const exo1AtmosphereMaterial = new THREE.MeshPhongMaterial({
-                color: 0x7FFFD4,
-                transparent: true,
-                opacity: 0.2,
-                side: THREE.BackSide
-            });
-            exo1Atmosphere = new THREE.Mesh(exo1AtmosphereGeometry, exo1AtmosphereMaterial);
-            exoplanet1.add(exo1Atmosphere);
-
-            // Exoplanet 2 (TRAPPIST-1e)
-            const exo2Geometry = new THREE.SphereGeometry(0.92, 32, 32);
-            const exo2Material = new THREE.MeshPhongMaterial({
-                map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Artist%27s_depiction_of_the_surface_of_the_exoplanet_TRAPPIST-1f.jpg/1024px-Artist%27s_depiction_of_the_surface_of_the_exoplanet_TRAPPIST-1f.jpg'),
-                bumpScale: 0.05,
-                specular: new THREE.Color('grey')
-            });
-            exoplanet2 = new THREE.Mesh(exo2Geometry, exo2Material);
-            exoplanet2.position.set(20, 0, 0);
-            scene.add(exoplanet2);
-
-            // Exoplanet 2's atmosphere
-            const exo2AtmosphereGeometry = new THREE.SphereGeometry(0.93, 32, 32);
-            const exo2AtmosphereMaterial = new THREE.MeshPhongMaterial({
-                color: 0xFFA500,
-                transparent: true,
-                opacity: 0.2,
-                side: THREE.BackSide
-            });
-            exo2Atmosphere = new THREE.Mesh(exo2AtmosphereGeometry, exo2AtmosphereMaterial);
-            exoplanet2.add(exo2Atmosphere);
+           
+           
+            
+            
         }
 
         function createStarField() {
@@ -376,9 +324,8 @@
             };
 
             earthOrbit = createOrbitLine(10);
-            exo1Orbit = createOrbitLine(15);
-            exo2Orbit = createOrbitLine(20);
-            scene.add(earthOrbit, exo1Orbit, exo2Orbit);
+            
+            scene.add(earthOrbit, );
         }
 
         function setupEventListeners() {
@@ -416,15 +363,14 @@
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects([sun, earth, exoplanet1, exoplanet2]);
+            const intersects = raycaster.intersectObjects([sun, earth]);
 
             if (intersects.length > 0) {
                 const object = intersects[0].object;
                 let planetInfo;
                 if (object === sun) planetInfo = planetData['Sun'];
                 else if (object === earth) planetInfo = planetData['Earth'];
-                else if (object === exoplanet1) planetInfo = planetData['Kepler-186f'];
-                else if (object === exoplanet2) planetInfo = planetData['TRAPPIST-1e'];
+                
 
                 if (planetInfo) {
                     const infoBox = document.getElementById('infoBox');
@@ -444,8 +390,7 @@
         function toggleOrbits() {
             showOrbits = !showOrbits;
             earthOrbit.visible = showOrbits;
-            exo1Orbit.visible = showOrbits;
-            exo2Orbit.visible = showOrbits;
+           
         }
 
         function toggleRotation() {
@@ -453,11 +398,9 @@
         }
 
         function toggleAtmosphere() {
-            showAtmosphere = !showAtmosphere;
-            earthAtmosphere.visible = showAtmosphere;
-            exo1Atmosphere.visible = showAtmosphere;
-            exo2Atmosphere.visible = showAtmosphere;
-        }
+    window.location.href = "https://web-production-ac96d.up.railway.app/"; // Replace with your desired URL
+}
+
 
         function animate() {
             requestAnimationFrame(animate);
@@ -465,8 +408,7 @@
             if (isRotating) {
                 sun.rotation.y += 0.001;
                 earth.rotation.y += 0.005;
-                exoplanet1.rotation.y += 0.003;
-                exoplanet2.rotation.y += 0.004;
+                
             }
 
             // Planet orbits
@@ -474,11 +416,7 @@
             earth.position.x = Math.cos(time) * 10;
             earth.position.z = Math.sin(time) * 10;
 
-            exoplanet1.position.x = Math.cos(time * 0.8) * 15;
-            exoplanet1.position.z = Math.sin(time * 0.8) * 15;
-
-            exoplanet2.position.x = Math.cos(time * 0.6) * 20;
-            exoplanet2.position.z = Math.sin(time * 0.6) * 20;
+            
 
             // Rotate starfield
             starField.rotation.y += 0.0001;

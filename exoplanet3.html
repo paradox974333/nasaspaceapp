@@ -78,13 +78,14 @@
     font-size: 180px;
     font-weight: bold;
     font-family: 'Arial', sans-serif;
-    color: rgba(255, 255, 255, 0.306); /* Subtle and elegant transparency */
+    color: rgba(255, 255, 255, 0.126); /* Subtle and elegant transparency */
     z-index: 1; /* Behind the interactive elements */
     letter-spacing: 20px;
     text-transform: uppercase;
     pointer-events: none; /* Prevent interaction */
     user-select: none; /* Prevent text selection */
 }
+
 
 /* Adjust for smaller screens */
 @media (max-width: 768px) {
@@ -113,7 +114,7 @@
 }
 
 #planetMenu button {
-    display: block;
+    display: flex;
     margin: 10px 0;
     padding: 10px 20px;
     background-color: rgba(255, 255, 255, 0.1);
@@ -160,6 +161,7 @@
 }
 
 
+
     </style>
 </head>
 <body>
@@ -169,13 +171,13 @@
     <div id="backgroundText">SOLAR SYSTEM</div>
     <button id="showPlanetsBtn">Show Exoplanets</button>
 
-    <div id="planetMenu">
-        <button onclick="location.href='index.html'">HOME</button>
-        <button onclick="location.href='exoplanet1.html'">Kepler-186f</button>
-        <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
-        <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
-        <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
-    </div>
+<div id="planetMenu">
+    <button onclick="location.href='index.html'">HOME</button>
+    <button onclick="location.href='exoplanet1.html'">Kepler-186f</button>
+    <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
+    <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
+    <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
+</div>
 
 
     <div id="container"></div>
@@ -183,7 +185,7 @@
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
-        <button id="toggleAtmosphere">CHAT WITH AI</button>
+        <button id="toggleAtmosphere">CHAT WITH AI </button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -213,8 +215,21 @@
                 radius: '6,371 km',
                 mass: '5.97 × 10^24 kg',
                 orbitalPeriod: '365.25 days'
+            },
+            'Kepler-186f': {
+                name: 'Kepler-186f',
+                description: 'An exoplanet orbiting the red dwarf Kepler-186, about 582 light-years from Earth.',
+                radius: '1.17 × Earth radius',
+                mass: 'Unknown',
+                orbitalPeriod: '129.9 days'
+            },
+            'TRAPPIST-1e': {
+                name: 'TRAPPIST-1e',
+                description: 'An exoplanet orbiting the ultra-cool dwarf star TRAPPIST-1, about 39 light-years from Earth.',
+                radius: '0.92 × Earth radius',
+                mass: '0.77 × Earth mass',
+                orbitalPeriod: '6.1 days'
             }
-          
         };
 
         function init() {
@@ -252,41 +267,34 @@
             const loader = new THREE.TextureLoader();
 
             // Sun
-            const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
+            const sunGeometry = new THREE.SphereGeometry(4.7, 32, 32);
             const sunMaterial = new THREE.MeshBasicMaterial({
                 map: loader.load('8k_sun.jpg')
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
             scene.add(sun);
 
-            // Earth
-            const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
-            const earthMaterial = new THREE.MeshPhongMaterial({
-                map: loader.load('8k_earth_daymap.jpg'),
-                bumpMap: loader.load('8k_earth_nightmap.jpg'),
+           
+            const exo2Geometry = new THREE.SphereGeometry(3, 32, 32);
+            const exo2Material = new THREE.MeshPhongMaterial({
+                map: loader.load('jup.jpeg'),
                 bumpScale: 0.05,
-                specularMap: loader.load('https://upload.wikimedia.org/wikipedia/commons/4/48/Shadedrelief.jpg'),
                 specular: new THREE.Color('grey')
             });
-            earth = new THREE.Mesh(earthGeometry, earthMaterial);
-            earth.position.set(10, 0, 0);
-            scene.add(earth);
+            exoplanet2 = new THREE.Mesh(exo2Geometry, exo2Material);
+            exoplanet2.position.set(20, 0, 0);
+            scene.add(exoplanet2);
 
-            // Earth's atmosphere
-            const earthAtmosphereGeometry = new THREE.SphereGeometry(1.01, 32, 32);
-            const earthAtmosphereMaterial = new THREE.MeshPhongMaterial({
-                color: 0x4CA1FF,
+            // Exoplanet 2's atmosphere
+            const exo2AtmosphereGeometry = new THREE.SphereGeometry(0.93, 32, 32);
+            const exo2AtmosphereMaterial = new THREE.MeshPhongMaterial({
+                color: 0xFFA500,
                 transparent: true,
                 opacity: 0.2,
                 side: THREE.BackSide
             });
-            earthAtmosphere = new THREE.Mesh(earthAtmosphereGeometry, earthAtmosphereMaterial);
-            earth.add(earthAtmosphere);
-
-           
-           
-            
-            
+            exo2Atmosphere = new THREE.Mesh(exo2AtmosphereGeometry, exo2AtmosphereMaterial);
+            exoplanet2.add(exo2Atmosphere);
         }
 
         function createStarField() {
@@ -323,9 +331,9 @@
                 return new THREE.Line(orbitGeometry, orbitMaterial);
             };
 
-            earthOrbit = createOrbitLine(10);
             
-            scene.add(earthOrbit, );
+            exo2Orbit = createOrbitLine(20);
+            scene.add( exo2Orbit);
         }
 
         function setupEventListeners() {
@@ -363,14 +371,15 @@
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects([sun, earth]);
+            const intersects = raycaster.intersectObjects([sun, earth, exoplanet1, exoplanet2]);
 
             if (intersects.length > 0) {
                 const object = intersects[0].object;
                 let planetInfo;
                 if (object === sun) planetInfo = planetData['Sun'];
                 else if (object === earth) planetInfo = planetData['Earth'];
-                
+                else if (object === exoplanet1) planetInfo = planetData['Kepler-186f'];
+                else if (object === exoplanet2) planetInfo = planetData['TRAPPIST-1e'];
 
                 if (planetInfo) {
                     const infoBox = document.getElementById('infoBox');
@@ -390,7 +399,8 @@
         function toggleOrbits() {
             showOrbits = !showOrbits;
             earthOrbit.visible = showOrbits;
-           
+            exo1Orbit.visible = showOrbits;
+            exo2Orbit.visible = showOrbits;
         }
 
         function toggleRotation() {
@@ -407,16 +417,17 @@
 
             if (isRotating) {
                 sun.rotation.y += 0.001;
-                earth.rotation.y += 0.005;
                 
+                exoplanet2.rotation.y += 0.004;
             }
 
             // Planet orbits
             const time = Date.now() * 0.0001;
-            earth.position.x = Math.cos(time) * 10;
-            earth.position.z = Math.sin(time) * 10;
+           
+           
 
-            
+            exoplanet2.position.x = Math.cos(time * 0.6) * 20;
+            exoplanet2.position.z = Math.sin(time * 0.6) * 20;
 
             // Rotate starfield
             starField.rotation.y += 0.0001;
