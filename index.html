@@ -449,8 +449,8 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
         function onInteraction(event) {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            const x = event.clientX || (event.touches && event.touches[0].clientX);
+            const y = event.clientY || (event.touches && event.touches[0].clientY);
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(planets);
             if (intersects.length > 0) {
