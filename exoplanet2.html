@@ -101,63 +101,68 @@
     }
 }
 #planetMenu {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 10px;
-    text-align: center;
-}
+            display: none; /* Initially hidden */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10; /* Ensure the menu is on top */
+        }
 
-#planetMenu button {
-    display: block;
-    margin: 10px 0;
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    transition: all 0.3s ease;
-}
+        #planetMenu button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
 
-#planetMenu button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
+        #planetMenu button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
 
-#showPlanetsBtn {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #f39c12;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+        #showPlanetsBtn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute; /* Position the button */
+            top: 20px; /* Adjust as necessary */
+            right: 20px; /* Move it to the right side */
+            z-index: 10; /* Ensure it's on top */
+        }
 
-#showPlanetsBtn:hover {
-    background-color: #e67e22;
-}
+        #showPlanetsBtn:hover {
+            background-color: #e67e22;
+        }
 
-/* Responsive for mobile */
-@media (max-width: 768px) {
-    #planetMenu button, #showPlanetsBtn {
-        font-size: 16px;
-        padding: 8px 16px;
-    }
-}
+        /* Responsive for mobile */
+        @media (max-width: 768px) {
+            #planetMenu button, #showPlanetsBtn {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+        }
 
-@media (max-width: 480px) {
-    #planetMenu button, #showPlanetsBtn {
-        font-size: 14px;
-        padding: 6px 12px;
-    }
-}
+        @media (max-width: 480px) {
+            #planetMenu button, #showPlanetsBtn {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+        }
 
 
     </style>
@@ -171,8 +176,8 @@
 
     <div id="planetMenu">
         <button onclick="location.href='index.html'">HOME</button>
-        <button onclick="location.href='exoplanet1.html'">Kepler-186f</button>
-        <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
+        <button onclick="location.href='exoplanet1.html'">Kepler-22b</button>
+        <button onclick="location.href='exoplanet2.html'">K2-141 b</button>
         <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
         <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
     </div>
@@ -254,7 +259,7 @@
             // Sun
             const sunGeometry = new THREE.SphereGeometry(4, 32, 32);
             const sunMaterial = new THREE.MeshBasicMaterial({
-                map: loader.load('8k_sun.jpg')
+                map: loader.load('sun.jpg')
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
             scene.add(sun);
