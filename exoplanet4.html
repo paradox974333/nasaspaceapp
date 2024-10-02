@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ultimate 3D Exoplanet Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+        }
+        #infoBox {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.4;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+        }
+        #loadingText {
+            color: #fff;
+            font-size: 24px;
+        }
+        #backgroundText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 180px;
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    color: rgba(255, 255, 255, 0.306); /* Subtle and elegant transparency */
+    z-index: 1; /* Behind the interactive elements */
+    letter-spacing: 20px;
+    text-transform: uppercase;
+    pointer-events: none; /* Prevent interaction */
+    user-select: none; /* Prevent text selection */
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+    #backgroundText {
+        font-size: 100px;  /* Smaller font size for tablets/phones */
+        letter-spacing: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #backgroundText {
+        font-size: 60px;  /* Even smaller for phones */
+        letter-spacing: 5px;
+    }
+}
+#planetMenu {
+            display: none; /* Initially hidden */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10; /* Ensure the menu is on top */
+        }
+
+        #planetMenu button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        #planetMenu button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        #showPlanetsBtn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute; /* Position the button */
+            top: 20px; /* Adjust as necessary */
+            right: 20px; /* Move it to the right side */
+            z-index: 10; /* Ensure it's on top */
+        }
+
+        #showPlanetsBtn:hover {
+            background-color: #e67e22;
+        }
+
+        /* Responsive for mobile */
+        @media (max-width: 768px) {
+            #planetMenu button, #showPlanetsBtn {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #planetMenu button, #showPlanetsBtn {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div id="loadingText">Loading Ultimate Exoplanet Explorer...</div>
+    </div>
+    <div id="backgroundText">K2-141 b</div>
+    <button id="showPlanetsBtn">Show Exoplanets</button>
+
+    <div id="planetMenu">
+        <button onclick="location.href='index.html'">HOME</button>
+        <button onclick="location.href='exoplanet1.html'">Kepler-22b</button>
+        <button onclick="location.href='exoplanet2.html'">K2-141 b</button>
+        <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
+        <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
+    </div>
+
+
+    <div id="container"></div>
+    <div id="infoBox">Click on a planet for detailed info.</div>
+    <div id="controls">
+        <button id="toggleOrbits">Toggle Orbits</button>
+        <button id="toggleRotation">Toggle Rotation</button>
+        <button id="toggleAtmosphere">CHAT WITH AI</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let sun, earth, exoplanet1, exoplanet2;
+        let earthAtmosphere, exo1Atmosphere, exo2Atmosphere;
+        let earthOrbit, exo1Orbit, exo2Orbit;
+        let starField;
+        let raycaster, mouse;
+        let isRotating = true, showOrbits = true, showAtmosphere = true;
+
+        const planetData = {
+            'Sun': {
+                name: 'Sun',
+                description: 'The star at the center of our Solar System.',
+                radius: '696,340 km',
+                mass: '1.989 × 10^30 kg',
+                temperature: '5,778 K (surface)'
+            },
+            'Earth': {
+                name: 'Earth',
+                description: 'Our home planet, the third from the Sun in the Solar System.',
+                radius: '6,371 km',
+                mass: '5.97 × 10^24 kg',
+                orbitalPeriod: '365.25 days'
+            }
+          
+        };
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+
+            camera.position.z = 30;
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            createLighting();
+            createPlanets();
+            createStarField();
+            createOrbits();
+            setupEventListeners();
+        }
+
+        function createLighting() {
+            const ambientLight = new THREE.AmbientLight(0x333333);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.PointLight(0xFFFFFF, 2, 300);
+            sunLight.position.set(0, 0, 0);
+            scene.add(sunLight);
+        }
+
+        function createPlanets() {
+            const loader = new THREE.TextureLoader();
+
+            // Sun
+            const sunGeometry = new THREE.SphereGeometry(3.4, 32, 32);
+            const sunMaterial = new THREE.MeshBasicMaterial({
+                map: loader.load('red.png')
+            });
+            sun = new THREE.Mesh(sunGeometry, sunMaterial);
+            scene.add(sun);
+
+            // Earth
+            const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
+            const earthMaterial = new THREE.MeshPhongMaterial({
+                map: loader.load('gli.jpg'),
+                bumpMap: loader.load('8k_earth_nightmap.jpg'),
+                bumpScale: 0.05,
+                specularMap: loader.load('https://upload.wikimedia.org/wikipedia/commons/4/48/Shadedrelief.jpg'),
+                specular: new THREE.Color('grey')
+            });
+            earth = new THREE.Mesh(earthGeometry, earthMaterial);
+            earth.position.set(10, 0, 0);
+            scene.add(earth);
+
+            // Earth's atmosphere
+            const earthAtmosphereGeometry = new THREE.SphereGeometry(1.01, 32, 32);
+            const earthAtmosphereMaterial = new THREE.MeshPhongMaterial({
+                color: 0x4CA1FF,
+                transparent: true,
+                opacity: 0.2,
+                side: THREE.BackSide
+            });
+            earthAtmosphere = new THREE.Mesh(earthAtmosphereGeometry, earthAtmosphereMaterial);
+            earth.add(earthAtmosphere);
+
+           
+           
+            
+            
+        }
+
+        function createStarField() {
+            const starGeometry = new THREE.BufferGeometry();
+            const starMaterial = new THREE.PointsMaterial({
+                color: 0xFFFFFF,
+                size: 0.05,
+                transparent: true
+            });
+
+            const starVertices = [];
+            for (let i = 0; i < 10000; i++) {
+                const x = (Math.random() - 0.5) * 2000;
+                const y = (Math.random() - 0.5) * 2000;
+                const z = (Math.random() - 0.5) * 2000;
+                starVertices.push(x, y, z);
+            }
+
+            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+            starField = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starField);
+        }
+
+        function createOrbits() {
+            const createOrbitLine = (radius) => {
+                const orbitGeometry = new THREE.BufferGeometry();
+                const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.3 });
+                const orbitPoints = [];
+                for (let i = 0; i <= 64; i++) {
+                    const angle = (i / 64) * Math.PI * 2;
+                    orbitPoints.push(new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius));
+                }
+                orbitGeometry.setFromPoints(orbitPoints);
+                return new THREE.Line(orbitGeometry, orbitMaterial);
+            };
+
+            earthOrbit = createOrbitLine(10);
+            
+            scene.add(earthOrbit, );
+        }
+
+        function setupEventListeners() {
+    window.addEventListener('resize', onWindowResize, false);
+    
+    // Adding click and touch event listeners
+    window.addEventListener('click', onMouseClick, false);
+    window.addEventListener('touchstart', onMouseClick, false); // Touch event for mobile
+
+    const toggleOrbitsButton = document.getElementById('toggleOrbits');
+    const toggleRotationButton = document.getElementById('toggleRotation');
+    const toggleAtmosphereButton = document.getElementById('toggleAtmosphere');
+
+    // Adding click and touch event listeners to buttons
+    toggleOrbitsButton.addEventListener('click', toggleOrbits);
+    toggleOrbitsButton.addEventListener('touchstart', toggleOrbits);
+
+    toggleRotationButton.addEventListener('click', toggleRotation);
+    toggleRotationButton.addEventListener('touchstart', toggleRotation);
+
+    toggleAtmosphereButton.addEventListener('click', toggleAtmosphere);
+    toggleAtmosphereButton.addEventListener('touchstart', toggleAtmosphere);
+}
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+       
+
+        function onMouseClick(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects([sun, earth]);
+
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                let planetInfo;
+                if (object === sun) planetInfo = planetData['Sun'];
+                else if (object === earth) planetInfo = planetData['Earth'];
+                
+
+                if (planetInfo) {
+                    const infoBox = document.getElementById('infoBox');
+                    infoBox.innerHTML = `
+                        <h3>${planetInfo.name}</h3>
+                        <p>${planetInfo.description}</p>
+                        <p><strong>Radius:</strong> ${planetInfo.radius}</p>
+                        <p><strong>Mass:</strong> ${planetInfo.mass}</p>
+                        ${planetInfo.orbitalPeriod ? `<p><strong>Orbital Period:</strong> ${planetInfo.orbitalPeriod}</p>` : ''}
+                        ${planetInfo.temperature ? `<p><strong>Temperature:</strong> ${planetInfo.temperature}</p>` : ''}
+                    `;
+                    infoBox.style.opacity = '1';
+                }
+            }
+        }
+
+        function toggleOrbits() {
+            showOrbits = !showOrbits;
+            earthOrbit.visible = showOrbits;
+           
+        }
+
+        function toggleRotation() {
+            isRotating = !isRotating;
+        }
+
+        function toggleAtmosphere() {
+    window.location.href = "https://web-production-ac96d.up.railway.app/"; // Replace with your desired URL
+}
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isRotating) {
+                sun.rotation.y += 0.001;
+                earth.rotation.y += 0.005;
+                
+            }
+
+            // Planet orbits
+            const time = Date.now() * 0.0001;
+            earth.position.x = Math.cos(time) * 10;
+            earth.position.z = Math.sin(time) * 10;
+
+            
+
+            // Rotate starfield
+            starField.rotation.y += 0.0001;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1000);
+            }, 1000);
+        });
+        const showPlanetsBtn = document.getElementById('showPlanetsBtn');
+const planetMenu = document.getElementById('planetMenu');
+
+showPlanetsBtn.addEventListener('click', () => {
+    // Toggle the display of the planet menu
+    planetMenu.style.display = planetMenu.style.display === 'block' ? 'none' : 'block';
+});
+// Wait for a few seconds and then hide the background text
+setTimeout(() => {
+    const backgroundText = document.getElementById('backgroundText');
+    backgroundText.style.display = 'none'; // Hide the background text
+}, 5000); // 5000 milliseconds = 5 seconds
+
+    </script>
+    
+</body>
+</html>
