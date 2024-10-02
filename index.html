@@ -431,8 +431,8 @@
         }
         function setupEventListeners() {
             window.addEventListener('resize', onWindowResize, false);
-            window.addEventListener('click', onMouseClick, false);
-            window.addEventListener('touchstart', onMouseClick, false);
+            window.addEventListener('click', onInteraction, false);
+            window.addEventListener('touchstart', onInteraction, false);
             const toggleOrbitsButton = document.getElementById('toggleOrbits');
             const toggleRotationButton = document.getElementById('toggleRotation');
             const toggleAtmosphereButton = document.getElementById('toggleAtmosphere');
@@ -448,7 +448,7 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
-        function onMouseClick(event) {
+        function onInteraction(event) {
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             raycaster.setFromCamera(mouse, camera);
