@@ -356,8 +356,8 @@
     window.addEventListener('resize', onWindowResize, false);
     
     // Adding click and touch event listeners
-    window.addEventListener('click', onMouseClick, false);
-    window.addEventListener('touchstart', onMouseClick, false); // Touch event for mobile
+    window.addEventListener('click', onInteraction, false);
+    window.addEventListener('touchstart', onInteraction, false); // Touch event for mobile
 
     const toggleOrbitsButton = document.getElementById('toggleOrbits');
     const toggleRotationButton = document.getElementById('toggleRotation');
@@ -382,10 +382,9 @@
 
        
 
-        function onMouseClick(event) {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
+        function onInteraction(event) {
+            const x = event.clientX || (event.touches && event.touches[0].clientX);
+            const y = event.clientY || (event.touches && event.touches[0].clientY);
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects([sun, earth]);
 
