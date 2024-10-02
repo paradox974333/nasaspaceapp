@@ -1,0 +1,27 @@
+{
+    "name": "NASA Space App Challenge 2024 - Hubble Explorer",
+    "short_name": "Hubble Explorer",
+    "description": "Explore the wonders of the universe with the Hubble Space Telescope through this interactive web app.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#00001e",
+    "theme_color": "#0096ff",
+    "orientation": "portrait",
+    "icons": [
+      {
+        "src": "space_apps_003.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "space_apps_003.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "scope": "/",
+    "lang": "en",
+    "dir": "ltr",
+    "prefer_related_applications": false
+  }
+  
