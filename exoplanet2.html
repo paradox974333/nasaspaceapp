@@ -188,7 +188,24 @@
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
-        <button id="toggleAtmosphere">CHAT WITH AI</button>
+        <button id="toggleAtmosphere" style="
+    background-color: #4CAF50; /* Green background */
+    border: none; /* No border */
+    color: white; /* White text */
+    padding: 15px 32px; /* Padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block; /* Inline block */
+    font-size: 16px; /* Font size */
+    margin: 4px 2px; /* Margins */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+">
+    CHAT WITH AI
+</button>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -206,18 +223,20 @@
 
         const planetData = {
             'Sun': {
-                name: 'Sun',
-                description: 'The star at the center of our Solar System.',
-                radius: '696,340 km',
-                mass: '1.989 × 10^30 kg',
-                temperature: '5,778 K (surface)'
+                name: 'K2-141',
+        description: 'An orange dwarf star that hosts the exoplanet K2-141b.',
+        radius: '0.7 Solar radii',
+        mass: '0.7 Solar masses',
+        temperature: '4500 K',
+        spectralType: 'K-type main-sequence star'
             },
             'Earth': {
-                name: 'Earth',
-                description: 'Our home planet, the third from the Sun in the Solar System.',
-                radius: '6,371 km',
-                mass: '5.97 × 10^24 kg',
-                orbitalPeriod: '365.25 days'
+                name: 'K2-141b',
+        description: 'An extreme exoplanet with a lava ocean and supersonic winds, orbiting very close to its host star.',
+        radius: '1.51 Earth radii',
+        mass: '5.08 × 10^24 kg',
+        orbitalPeriod: '0.28 days',
+        temperature: '3000 K (day side), 500 K (night side)'
             }
           
         };

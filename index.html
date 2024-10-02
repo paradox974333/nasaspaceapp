@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ultimate Solar System Explorer</title>
+    <link rel="manifest" href="/manifest.json">
     <style>
         body {
             margin: 0;
@@ -183,7 +184,24 @@
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
-        <button id="toggleAtmosphere">CHAT WITH AI</button>
+        <button id="toggleAtmosphere" style="
+    background-color: #4CAF50; /* Green background */
+    border: none; /* No border */
+    color: white; /* White text */
+    padding: 15px 32px; /* Padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block; /* Inline block */
+    font-size: 16px; /* Font size */
+    margin: 4px 2px; /* Margins */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+">
+    CHAT WITH AI
+</button>
+
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -308,7 +326,7 @@
             setupEventListeners();
         }
         function createLighting() {
-            const ambientLight = new THREE.AmbientLight(0x333333);
+            const ambientLight = new THREE.AmbientLight(0x555555);
             scene.add(ambientLight);
             const sunLight = new THREE.PointLight(0xFFFFFF, 3, 300);
             sunLight.position.set(0, 0, 0);
@@ -321,13 +339,13 @@
         const geometry = new THREE.SphereGeometry(data.size, 32, 32);
 
         // Check if it's the Sun to apply a different material
+        
         const material = name === 'Sun' 
-            ? new THREE.MeshPhongMaterial({
+            ? new THREE.MeshBasicMaterial({
                 map: loader.load(`${name.toLowerCase()}.jpg`),
-                emissive: new THREE.Color(0xFFA500),   // Make Sun emit yellow light
-                emissiveIntensity: 2,                  // Increase brightness
+                                  
                 bumpScale: 0.05,
-                specular: new THREE.Color('grey'),
+                specular: new THREE.Color('white'),
                 shininess: 100                         // Enhance shine
             })
             : new THREE.MeshPhongMaterial({

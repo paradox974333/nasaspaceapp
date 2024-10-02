@@ -188,7 +188,24 @@
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
-        <button id="toggleAtmosphere">CHAT WITH AI</button>
+        <button id="toggleAtmosphere" style="
+    background-color: #4CAF50; /* Green background */
+    border: none; /* No border */
+    color: white; /* White text */
+    padding: 15px 32px; /* Padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block; /* Inline block */
+    font-size: 16px; /* Font size */
+    margin: 4px 2px; /* Margins */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+">
+    CHAT WITH AI
+</button>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -206,18 +223,21 @@
 
         const planetData = {
             'Sun': {
-                name: 'Sun',
-                description: 'The star at the center of our Solar System.',
-                radius: '696,340 km',
-                mass: '1.989 × 10^30 kg',
-                temperature: '5,778 K (surface)'
+                name: 'Gliese 581g',
+        description: 'A potentially habitable exoplanet located in the Gliese 581 system, within the star’s habitable zone.',
+        radius: '1.5 Earth radii (estimated)',
+        mass: '3.1 - 4.3 Earth masses',
+        orbitalPeriod: '36.6 days',
+        temperature: '228 K (estimated)',
+        habitability: 'Potentially habitable'
             },
             'Earth': {
-                name: 'Earth',
-                description: 'Our home planet, the third from the Sun in the Solar System.',
-                radius: '6,371 km',
-                mass: '5.97 × 10^24 kg',
-                orbitalPeriod: '365.25 days'
+                name: 'Gliese 581',
+        description: 'A red dwarf star that hosts several exoplanets, including the potentially habitable Gliese 581g.',
+        radius: '0.29 Solar radii',
+        mass: '0.31 Solar masses',
+        temperature: '3,200 K',
+        spectralType: 'M3V (Red dwarf)'
             }
           
         };
@@ -257,7 +277,7 @@
             const loader = new THREE.TextureLoader();
 
             // Sun
-            const sunGeometry = new THREE.SphereGeometry(3.4, 32, 32);
+            const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
             const sunMaterial = new THREE.MeshBasicMaterial({
                 map: loader.load('red.png')
             });
