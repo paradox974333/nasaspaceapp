@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exoplanets Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Exoplanets Data</h1>
+    <div id="error-message" class="error"></div>
+    <table id="exoplanets-table">
+        <thead>
+            <tr>
+                <th>Planet Name</th>
+                <th>Radius (R⊕)</th>
+                <th>Mass (M⊕)</th>
+                <th>Orbital Period (days)</th>
+                <th>Equilibrium Temperature (K)</th>
+                <th>Discovery Method</th>
+                <th>Discovery Year</th>
+                <th>Star Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Exoplanet data will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fetch exoplanet data from the server
+        async function fetchExoplanetData() {
+            try {
+                const response = await fetch('http://localhost:3000/exoplanets');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const planets = await response.json();
+                displayExoplanetData(planets);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('error-message').textContent = 'Failed to load exoplanet data. Please try again later.';
+            }
+        }
+
+        // Display the exoplanet data in the table
+        function displayExoplanetData(planets) {
+            const tableBody = document.getElementById('exoplanets-table').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear any existing rows
+
+            planets.forEach(planet => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${planet.planetName}</td>
+                    <td>${planet.radius || 'N/A'}</td>
+                    <td>${planet.mass || 'N/A'}</td>
+                    <td>${planet.orbitalPeriod || 'N/A'}</td>
+                    <td>${planet.equilibriumTemperature || 'N/A'}</td>
+                    <td>${planet.discoveryMethod || 'N/A'}</td>
+                    <td>${planet.discoveryYear || 'N/A'}</td>
+                    <td>${planet.starName}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Call the fetch function on page load
+        window.onload = fetchExoplanetData;
+    </script>
+</body>
+</html>

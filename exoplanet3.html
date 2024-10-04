@@ -78,14 +78,13 @@
     font-size: 180px;
     font-weight: bold;
     font-family: 'Arial', sans-serif;
-    color: rgba(255, 255, 255, 0.126); /* Subtle and elegant transparency */
+    color: rgba(255, 255, 255, 0.306); /* Subtle and elegant transparency */
     z-index: 1; /* Behind the interactive elements */
     letter-spacing: 20px;
     text-transform: uppercase;
     pointer-events: none; /* Prevent interaction */
     user-select: none; /* Prevent text selection */
 }
-
 
 /* Adjust for smaller screens */
 @media (max-width: 768px) {
@@ -164,27 +163,49 @@
                 padding: 6px 12px;
             }
         }
+        #loader {
+            display: none; /* Hide loader by default */
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: auto;
+        }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #infoBox {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
+    <div id="loader"></div>
+    <div id="infoBox"></div>
     <div id="loadingScreen">
-        <div id="loadingText">Loading Ultimate Exoplanet Explorer...</div>
+        <div id="loadingText">Loading  Exoplanet Explorer...</div>
     </div>
-    <div id="backgroundText">WASP-121b</div>
+    <div id="backgroundText">Kepler-22b</div>
     <button id="showPlanetsBtn">Show Exoplanets</button>
 
-<div id="planetMenu">
-    <button onclick="location.href='index.html'">HOME</button>
-    <button onclick="location.href='exoplanet1.html'">Kepler-22b</button>
-    <button onclick="location.href='exoplanet2.html'">TRAPPIST-1e</button>
-    <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
-    <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
-</div>
-
+    <div id="planetMenu">
+        <button onclick="location.href='index.html'">HOME</button>
+        <button onclick="location.href='exoplanet1.html'">Kepler-22b</button>
+        <button onclick="location.href='exoplanet2.html'">K2-141 b</button>
+        <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
+        <button onclick="location.href='exoplanet4.html'">Kepler-452 b</button>
+    </div>
 
     <div id="container"></div>
-    <div id="infoBox">Click on a planet for detailed info.</div>
+    
+    <div id="loader" style="display: none;">Loading...</div>
+    <div id="infoBox"></div>
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
@@ -222,36 +243,24 @@
         let isRotating = true, showOrbits = true, showAtmosphere = true;
 
         const planetData = {
-            'Sun': {
-                name: 'Sun',
-                description: 'The star at the center of our Solar System.',
-                radius: '696,340 km',
-                mass: '1.989 × 10^30 kg',
-                temperature: '5,778 K (surface)'
-            },
-            'Earth': {
-                name: 'WASP-121b',
+    'Kepler-22': {
+        name: 'WASP-121b',
         description: 'An ultra-hot Jupiter with extreme temperatures and a distorted shape due to its close orbit to its star.',
         radius: '1.81 Jupiter radii',
         mass: '1.18 Jupiter masses',
         orbitalPeriod: '1.27 days',
         temperature: '2500 - 3000 K (day side)'
-            },
-            'Kepler-186f': {
-                name: 'Kepler-186f',
-                description: 'An exoplanet orbiting the red dwarf Kepler-186, about 582 light-years from Earth.',
-                radius: '1.17 × Earth radius',
-                mass: 'Unknown',
-                orbitalPeriod: '129.9 days'
-            },
-            'TRAPPIST-1e': {
-                name: 'TRAPPIST-1e',
-                description: 'An exoplanet orbiting the ultra-cool dwarf star TRAPPIST-1, about 39 light-years from Earth.',
-                radius: '0.92 × Earth radius',
-                mass: '0.77 × Earth mass',
-                orbitalPeriod: '6.1 days'
-            }
-        };
+    },
+    'Kepler-22b': {
+        name: 'WASP-121b',
+        description: 'An ultra-hot Jupiter with extreme temperatures and a distorted shape due to its close orbit to its star.',
+        radius: '1.81 Jupiter radii',
+        mass: '1.18 Jupiter masses',
+        orbitalPeriod: '1.27 days',
+        temperature: '2500 - 3000 K (day side)'
+    }
+};
+
 
         function init() {
             scene = new THREE.Scene();
@@ -288,34 +297,41 @@
             const loader = new THREE.TextureLoader();
 
             // Sun
-            const sunGeometry = new THREE.SphereGeometry(4.7, 32, 32);
+            const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
             const sunMaterial = new THREE.MeshBasicMaterial({
-                map: loader.load('sun.jpg')
+                map: loader.load('sun12.jpg')
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
             scene.add(sun);
 
-           
-            const exo2Geometry = new THREE.SphereGeometry(3, 32, 32);
-            const exo2Material = new THREE.MeshPhongMaterial({
+            // Earth
+            const earthGeometry = new THREE.SphereGeometry(1.8, 32, 32);
+            const earthMaterial = new THREE.MeshPhongMaterial({
                 map: loader.load('jup.jpeg'),
+                bumpMap: loader.load('8k_earth_nightmap.jpg'),
                 bumpScale: 0.05,
-                specular: new THREE.Color('grey')
+                specularMap: loader.load('https://upload.wikimedia.org/wikipedia/commons/4/48/Shadedrelief.jpg'),
+                specular: new THREE.Color('white')
             });
-            exoplanet2 = new THREE.Mesh(exo2Geometry, exo2Material);
-            exoplanet2.position.set(20, 0, 0);
-            scene.add(exoplanet2);
+            earth = new THREE.Mesh(earthGeometry, earthMaterial);
+            earth.position.set(17, 0, 0);
+            scene.add(earth);
 
-            // Exoplanet 2's atmosphere
-            const exo2AtmosphereGeometry = new THREE.SphereGeometry(0.93, 32, 32);
-            const exo2AtmosphereMaterial = new THREE.MeshPhongMaterial({
-                color: 0xFFA500,
+            // Earth's atmosphere
+            const earthAtmosphereGeometry = new THREE.SphereGeometry(1.01, 32, 32);
+            const earthAtmosphereMaterial = new THREE.MeshPhongMaterial({
+                color: 0x4CA1FF,
                 transparent: true,
                 opacity: 0.2,
                 side: THREE.BackSide
             });
-            exo2Atmosphere = new THREE.Mesh(exo2AtmosphereGeometry, exo2AtmosphereMaterial);
-            exoplanet2.add(exo2Atmosphere);
+            earthAtmosphere = new THREE.Mesh(earthAtmosphereGeometry, earthAtmosphereMaterial);
+            earth.add(earthAtmosphere);
+
+           
+           
+            
+            
         }
 
         function createStarField() {
@@ -352,9 +368,9 @@
                 return new THREE.Line(orbitGeometry, orbitMaterial);
             };
 
+            earthOrbit = createOrbitLine(10);
             
-            exo2Orbit = createOrbitLine(20);
-            scene.add( exo2Orbit);
+            scene.add(earthOrbit, );
         }
 
         function setupEventListeners() {
@@ -392,15 +408,14 @@
             const y = event.clientY || (event.touches && event.touches[0].clientY);
 
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects([sun, earth, exoplanet1, exoplanet2]);
+            const intersects = raycaster.intersectObjects([sun, earth]);
 
             if (intersects.length > 0) {
                 const object = intersects[0].object;
                 let planetInfo;
-                if (object === sun) planetInfo = planetData['Sun'];
-                else if (object === earth) planetInfo = planetData['Earth'];
-                else if (object === exoplanet1) planetInfo = planetData['Kepler-186f'];
-                else if (object === exoplanet2) planetInfo = planetData['TRAPPIST-1e'];
+                if (object === sun) planetInfo = planetData['Kepler-22'];
+                else if (object === earth) planetInfo = planetData['Kepler-22b'];
+                
 
                 if (planetInfo) {
                     const infoBox = document.getElementById('infoBox');
@@ -420,8 +435,7 @@
         function toggleOrbits() {
             showOrbits = !showOrbits;
             earthOrbit.visible = showOrbits;
-            exo1Orbit.visible = showOrbits;
-            exo2Orbit.visible = showOrbits;
+           
         }
 
         function toggleRotation() {
@@ -432,23 +446,21 @@
     window.location.href = "https://web-production-ac96d.up.railway.app/"; // Replace with your desired URL
 }
 
-
         function animate() {
             requestAnimationFrame(animate);
 
             if (isRotating) {
                 sun.rotation.y += 0.001;
+                earth.rotation.y += 0.005;
                 
-                exoplanet2.rotation.y += 0.004;
             }
 
             // Planet orbits
             const time = Date.now() * 0.0001;
-           
-           
+            earth.position.x = Math.cos(time) * 10;
+            earth.position.z = Math.sin(time) * 10;
 
-            exoplanet2.position.x = Math.cos(time * 0.6) * 20;
-            exoplanet2.position.z = Math.sin(time * 0.6) * 20;
+            
 
             // Rotate starfield
             starField.rotation.y += 0.0001;
@@ -483,6 +495,54 @@ setTimeout(() => {
 }, 5000); // 5000 milliseconds = 5 seconds
 
     </script>
+
+<script>
+    async function fetchExoplanets() {
+        const loader = document.getElementById('loader');
+        const infoBox = document.getElementById('infoBox');
+        
+        // Show the loader
+        loader.style.display = 'block';
+        infoBox.innerHTML = ''; // Clear previous content
+
+        try {
+            const response = await fetch('https://nasabackend-production.up.railway.app/exoplanets');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const exoplanets = await response.json();
+            
+            // Filter to get only WASP-121 b data
+            const wasp121b = exoplanets.find(planet => planet.planetName === "WASP-121 b");
+
+            if (wasp121b) {
+                infoBox.innerHTML = `
+                    <h3>${wasp121b.planetName}</h3>
+                    <p><strong>Radius:</strong> ${wasp121b.radius} Earth radii</p>
+                    <p><strong>Mass:</strong> ${wasp121b.mass} Earth masses</p>
+                    <p><strong>Orbital Period:</strong> ${wasp121b.orbitalPeriod} days</p>
+                    <p><strong>Equilibrium Temperature:</strong> ${wasp121b.equilibriumTemperature} K</p>
+                    <p><strong>Discovery Method:</strong> ${wasp121b.discoveryMethod}</p>
+                    <p><strong>Discovery Year:</strong> ${wasp121b.discoveryYear}</p>
+                    <p><strong>Star Name:</strong> ${wasp121b.starName}</p>
+                `;
+            } else {
+                infoBox.innerHTML = '<p>No data found for WASP-121 b.</p>';
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            infoBox.innerHTML = '<p>Error fetching data.</p>';
+        } finally {
+            // Hide the loader
+            loader.style.display = 'none';
+        }
+    }
+
+    // Call the function on page load
+    window.onload = fetchExoplanets; // Fetch data when the window loads
+</script>
+
+
     
 </body>
 </html>

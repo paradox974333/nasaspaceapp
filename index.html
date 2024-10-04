@@ -177,7 +177,7 @@
         <button onclick="location.href='exoplanet1.html'">Kepler-22B</button>
         <button onclick="location.href='exoplanet2.html'">K2-141 b</button>
         <button onclick="location.href='exoplanet3.html'">WASP-121b</button>
-        <button onclick="location.href='exoplanet4.html'">Gliese 581g</button>
+        <button onclick="location.href='exoplanet4.html'">Kepler-452 b</button>
     </div>
 
     
@@ -449,8 +449,8 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
         function onInteraction(event) {
-            const x = event.clientX || (event.touches && event.touches[0].clientX);
-            const y = event.clientY || (event.touches && event.touches[0].clientY);
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(planets);
             if (intersects.length > 0) {

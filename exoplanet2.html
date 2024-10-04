@@ -168,6 +168,8 @@
     </style>
 </head>
 <body>
+    <div id="loader" style="display: none;">Loading...</div>
+    <div id="infoBox"></div>
     <div id="loadingScreen">
         <div id="loadingText">Loading Ultimate Exoplanet Explorer...</div>
     </div>
@@ -184,7 +186,7 @@
 
 
     <div id="container"></div>
-    <div id="infoBox">Click on a planet for detailed info.</div>
+    <div id="infoBox"></div>
     <div id="controls">
         <button id="toggleOrbits">Toggle Orbits</button>
         <button id="toggleRotation">Toggle Rotation</button>
@@ -356,8 +358,8 @@
     window.addEventListener('resize', onWindowResize, false);
     
     // Adding click and touch event listeners
-    window.addEventListener('click', onInteraction, false);
-    window.addEventListener('touchstart', onInteraction, false); // Touch event for mobile
+    window.addEventListener('click', onMouseClick, false);
+    window.addEventListener('touchstart', onMouseClick, false); // Touch event for mobile
 
     const toggleOrbitsButton = document.getElementById('toggleOrbits');
     const toggleRotationButton = document.getElementById('toggleRotation');
@@ -382,9 +384,10 @@
 
        
 
-        function onInteraction(event) {
-            const x = event.clientX || (event.touches && event.touches[0].clientX);
-            const y = event.clientY || (event.touches && event.touches[0].clientY);
+        function onMouseClick(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects([sun, earth]);
 
@@ -474,6 +477,51 @@ setTimeout(() => {
 }, 5000); // 5000 milliseconds = 5 seconds
 
     </script>
-    
+<script>
+    async function fetchExoplanets() {
+        const loader = document.getElementById('loader');
+        const infoBox = document.getElementById('infoBox');
+        
+        // Show the loader
+        loader.style.display = 'block';
+        infoBox.innerHTML = ''; // Clear previous content
+
+        try {
+            const response = await fetch('http://localhost:3000/exoplanets');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const exoplanets = await response.json();
+            
+            // Filter to get only K2-141 b data
+            const k2_141b = exoplanets.find(planet => planet.planetName === "K2-141 b");
+
+            if (k2_141b) {
+                infoBox.innerHTML = `
+                    <h3>${k2_141b.planetName}</h3>
+                    <p><strong>Radius:</strong> ${k2_141b.radius} Jupiter radii</p>
+                    <p><strong>Mass:</strong> ${k2_141b.mass} Jupiter masses</p>
+                    <p><strong>Orbital Period:</strong> ${k2_141b.orbitalPeriod} days</p>
+                    <p><strong>Equilibrium Temperature:</strong> ${k2_141b.equilibriumTemperature} K</p>
+                    <p><strong>Discovery Method:</strong> ${k2_141b.discoveryMethod}</p>
+                    <p><strong>Discovery Year:</strong> ${k2_141b.discoveryYear}</p>
+                    <p><strong>Star Name:</strong> ${k2_141b.starName}</p>
+                `;
+            } else {
+                infoBox.innerHTML = '<p>No data found for K2-141 b.</p>';
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            infoBox.innerHTML = '<p>Error fetching data.</p>';
+        } finally {
+            // Hide the loader
+            loader.style.display = 'none';
+        }
+    }
+
+    // Call the function on page load
+    window.onload = fetchExoplanets; // Fetch data when the window loads
+</script>
+
 </body>
 </html>
