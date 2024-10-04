@@ -449,27 +449,39 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
         function onInteraction(event) {
-            const x = event.clientX || (event.touches && event.touches[0].clientX);
-            const y = event.clientY || (event.touches && event.touches[0].clientY);
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(planets);
-            if (intersects.length > 0) {
-                const object = intersects[0].object;
-                const planetInfo = planetData[Object.keys(planetData).find(key => planetData[key].size === object.geometry.parameters.radius)];
-                if (planetInfo) {
-                    const infoBox = document.getElementById('infoBox');
-                    infoBox.innerHTML = `
-                        <h3>${planetInfo.name}</h3>
-                        <p>${planetInfo.description}</p>
-                        <p><strong>Radius:</strong> ${planetInfo.radius}</p>
-                        <p><strong>Mass:</strong> ${planetInfo.mass}</p>
-                        ${planetInfo.orbitalPeriod ? `<p><strong>Orbital Period:</strong> ${planetInfo.orbitalPeriod}</p>` : ''}
-                        ${planetInfo.temperature ? `<p><strong>Temperature:</strong> ${planetInfo.temperature}</p>` : ''}
-                    `;
-                    infoBox.style.opacity = '1';
-                }
-            }
+    // Handle touch or mouse events for both desktop and mobile
+    const x = event.clientX || (event.touches && event.touches[0].clientX);
+    const y = event.clientY || (event.touches && event.touches[0].clientY);
+    
+    // Normalize the mouse or touch coordinates to fit the WebGL context
+    mouse.x = (x / window.innerWidth) * 2 - 1;
+    mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    
+    // Check for intersections with planets
+    const intersects = raycaster.intersectObjects(planets);
+    if (intersects.length > 0) {
+        const object = intersects[0].object;
+
+        // Find the corresponding planet data based on its radius
+        const planetInfo = planetData[Object.keys(planetData).find(key => planetData[key].size === object.geometry.parameters.radius)];
+        
+        if (planetInfo) {
+            const infoBox = document.getElementById('infoBox');
+            infoBox.innerHTML = `
+                <h3>${planetInfo.name}</h3>
+                <p>${planetInfo.description}</p>
+                <p><strong>Radius:</strong> ${planetInfo.radius}</p>
+                <p><strong>Mass:</strong> ${planetInfo.mass}</p>
+                ${planetInfo.orbitalPeriod ? `<p><strong>Orbital Period:</strong> ${planetInfo.orbitalPeriod}</p>` : ''}
+                ${planetInfo.temperature ? `<p><strong>Temperature:</strong> ${planetInfo.temperature}</p>` : ''}
+            `;
+            infoBox.style.opacity = '1';
         }
+    }
+}
+
         function toggleOrbits() {
             showOrbits = !showOrbits;
             orbits.forEach(orbit => orbit.visible = showOrbits);
