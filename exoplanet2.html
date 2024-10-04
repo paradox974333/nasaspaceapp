@@ -404,33 +404,42 @@
        
 
         function onInteraction(event) {
-            const x = event.clientX || (event.touches && event.touches[0].clientX);
-            const y = event.clientY || (event.touches && event.touches[0].clientY);
+    // Handle touch or mouse events for both desktop and mobile
+    const x = event.clientX || (event.touches && event.touches[0].clientX);
+    const y = event.clientY || (event.touches && event.touches[0].clientY);
 
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects([sun, earth]);
+    // Normalize the coordinates for the raycaster
+    mouse.x = (x / window.innerWidth) * 2 - 1;
+    mouse.y = -(y / window.innerHeight) * 2 + 1;
 
-            if (intersects.length > 0) {
-                const object = intersects[0].object;
-                let planetInfo;
-                if (object === sun) planetInfo = planetData['Sun'];
-                else if (object === earth) planetInfo = planetData['Earth'];
-                
+    raycaster.setFromCamera(mouse, camera);
 
-                if (planetInfo) {
-                    const infoBox = document.getElementById('infoBox');
-                    infoBox.innerHTML = `
-                        <h3>${planetInfo.name}</h3>
-                        <p>${planetInfo.description}</p>
-                        <p><strong>Radius:</strong> ${planetInfo.radius}</p>
-                        <p><strong>Mass:</strong> ${planetInfo.mass}</p>
-                        ${planetInfo.orbitalPeriod ? `<p><strong>Orbital Period:</strong> ${planetInfo.orbitalPeriod}</p>` : ''}
-                        ${planetInfo.temperature ? `<p><strong>Temperature:</strong> ${planetInfo.temperature}</p>` : ''}
-                    `;
-                    infoBox.style.opacity = '1';
-                }
-            }
+    // Intersect objects (sun and earth in this case)
+    const intersects = raycaster.intersectObjects([sun, earth]);
+
+    if (intersects.length > 0) {
+        const object = intersects[0].object;
+        let planetInfo;
+
+        // Check which object was intersected and assign corresponding data
+        if (object === sun) planetInfo = planetData['Sun'];
+        else if (object === earth) planetInfo = planetData['Earth'];
+
+        // If planetInfo exists, display the info in the infoBox
+        if (planetInfo) {
+            const infoBox = document.getElementById('infoBox');
+            infoBox.innerHTML = `
+                <h3>${planetInfo.name}</h3>
+                <p>${planetInfo.description}</p>
+                <p><strong>Radius:</strong> ${planetInfo.radius}</p>
+                <p><strong>Mass:</strong> ${planetInfo.mass}</p>
+                ${planetInfo.orbitalPeriod ? `<p><strong>Orbital Period:</strong> ${planetInfo.orbitalPeriod}</p>` : ''}
+                ${planetInfo.temperature ? `<p><strong>Temperature:</strong> ${planetInfo.temperature}</p>` : ''}
+            `;
+            infoBox.style.opacity = '1';
         }
+    }
+}
 
         function toggleOrbits() {
             showOrbits = !showOrbits;
