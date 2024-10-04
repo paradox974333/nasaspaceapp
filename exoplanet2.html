@@ -163,12 +163,31 @@
                 padding: 6px 12px;
             }
         }
+        #loader {
+            display: none; /* Hide loader by default */
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: auto;
+        }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #infoBox {
+            text-align: center;
+            margin-top: 20px;
+        }
 
     </style>
 </head>
 <body>
-    <div id="loader" style="display: none;">Loading...</div>
+    <div id="loader" style="display: none;"></div>
     <div id="infoBox"></div>
     <div id="loadingScreen">
         <div id="loadingText">Loading Ultimate Exoplanet Explorer...</div>
@@ -487,7 +506,7 @@ setTimeout(() => {
         infoBox.innerHTML = ''; // Clear previous content
 
         try {
-            const response = await fetch('http://localhost:3000/exoplanets');
+            const response = await fetch('https://nasabackend-production.up.railway.app/exoplanets');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
